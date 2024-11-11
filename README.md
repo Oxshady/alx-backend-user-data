@@ -1,3 +1,4 @@
+![Alt text for the image](./^_^.png)
 # 0x01. Basic Authentication
 
 ## Project Overview
