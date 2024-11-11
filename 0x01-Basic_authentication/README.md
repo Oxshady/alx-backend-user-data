@@ -1,31 +1,42 @@
-![Alt text for the image](./^_^.png)
-# 0x01. Basic Authentication
+# Simple API
 
-## Project Overview
-In this project, we will explore the authentication process and implement Basic Authentication on a simple API. While it's recommended to use established frameworks and modules for production-grade systems, this project focuses on building a Basic Authentication system from scratch for learning purposes.
+Simple HTTP API for playing with `User` model.
 
-## Background Context
-- Learn the fundamentals of Basic Authentication.
-- Understand the Base64 encoding mechanism and its role in authentication.
-- Explore HTTP headers and how they relate to user authentication.
 
-## Resources
-You can refer to the following resources for better understanding:
-- [REST API Authentication Mechanisms](https://www.freecodecamp.org/news/how-to-use-rest-api/)
-- [Base64 in Python](https://docs.python.org/3.7/library/base64.html)
-- [HTTP header Authorization](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization)
-- [Flask Documentation](https://flask.palletsprojects.com/)
-- [Base64 - Concept](https://en.wikipedia.org/wiki/Base64)
+## Files
 
-## Learning Objectives
-By the end of this project, you should be able to:
-- Explain what authentication means.
-- Describe Base64 encoding and its purpose.
-- Encode and decode strings in Base64.
-- Implement a simple Basic Authentication mechanism.
-- Handle the `Authorization` HTTP header.
+### `models/`
 
-## Project Requirements
-- Python 3.7 on Ubuntu 18.04 LTS
-- All files should follow the `pycodestyle` style guide (version 2.5)
-- All modules, classes, and functions should be documented using descriptive docstrings.
+- `base.py`: base of all models of the API - handle serialization to file
+- `user.py`: user model
+
+### `api/v1`
+
+- `app.py`: entry point of the API
+- `views/index.py`: basic endpoints of the API: `/status` and `/stats`
+- `views/users.py`: all users endpoints
+
+
+## Setup
+
+```
+$ pip3 install -r requirements.txt
+```
+
+
+## Run
+
+```
+$ API_HOST=0.0.0.0 API_PORT=5000 python3 -m api.v1.app
+```
+
+
+## Routes
+
+- `GET /api/v1/status`: returns the status of the API
+- `GET /api/v1/stats`: returns some stats of the API
+- `GET /api/v1/users`: returns the list of users
+- `GET /api/v1/users/:id`: returns an user based on the ID
+- `DELETE /api/v1/users/:id`: deletes an user based on the ID
+- `POST /api/v1/users`: creates a new user (JSON parameters: `email`, `password`, `last_name` (optional) and `first_name` (optional))
+- `PUT /api/v1/users/:id`: updates an user based on the ID (JSON parameters: `last_name` and `first_name`)
