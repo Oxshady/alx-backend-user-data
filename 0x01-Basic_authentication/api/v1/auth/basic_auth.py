@@ -89,6 +89,6 @@ class BasicAuth(Auth):
                 if token is not None:
                     token = self.extract_user_credentials(token)
                     if token is not None:
-                        user = self.user_object_from_credentials(token[0], [1])
+                        user = self.user_object_from_credentials(token[0], token[1])
                         return user
         return None
