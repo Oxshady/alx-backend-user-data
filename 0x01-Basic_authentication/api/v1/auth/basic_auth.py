@@ -70,7 +70,7 @@ class BasicAuth(Auth):
         if user_pwd is None:
             return None
         from models.user import User
-
+        User.load_from_file()
         users = User.search({"email": user_email})
         if not users:
             return None
