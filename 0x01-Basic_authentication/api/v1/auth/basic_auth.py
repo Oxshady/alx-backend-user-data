@@ -53,9 +53,12 @@ class BasicAuth(Auth):
             return (None, None)
         if not isinstance(decoded_base64_authorization_header, str):
             return (None, None)
-        if decoded_base64_authorization_header.find(":") == -1:
+        index = decoded_base64_authorization_header.find(":")
+        if index == -1:
             return (None, None)
-        return tuple(decoded_base64_authorization_header.strip().split(":"))
+        return (
+            decoded_base64_authorization_header.strip()[:index],
+            decoded_base64_authorization_header.strip()[index + 1:])
 
     def user_object_from_credentials(
         self, user_email: str, user_pwd: str
