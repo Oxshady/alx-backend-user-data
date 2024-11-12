@@ -60,7 +60,7 @@ def before_all_requests() -> None:
         return
     if auth.authorization_header(request) is None:
         abort(401)
-    if auth.current_user() is None:
+    if auth.current_user(request=request) is None:
         abort(403)
 
 
