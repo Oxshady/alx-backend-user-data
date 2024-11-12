@@ -47,14 +47,14 @@ def unauthorized(error) -> str:
 def before_all_requests() -> None:
     """run before all requests"""
     if auth is None:
-        pass
-    if auth.require_auth(request.path, [
+        return
+    if not auth.require_auth(request.path, [
         '/api/v1/status/',
         '/api/v1/unauthorized/',
         '/api/v1/forbidden/'
         ]
                         ):
-        pass
+        return
     if auth.authorization_header(request) is None:
         abort(401)
     if auth.current_user() is None:
