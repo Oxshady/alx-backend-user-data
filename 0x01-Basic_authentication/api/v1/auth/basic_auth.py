@@ -58,10 +58,8 @@ class BasicAuth(Auth):
         return tuple(decoded_base64_authorization_header.strip().split(":"))
 
     def user_object_from_credentials(
-        self,
-        user_email: str,
-        user_pwd: str
-    ) -> TypeVar('User'):
+        self, user_email: str, user_pwd: str
+    ) -> TypeVar("User"):
         """get user object from credential"""
         if not isinstance(user_email, str):
             return None
@@ -72,10 +70,10 @@ class BasicAuth(Auth):
         if user_pwd is None:
             return None
         from models.user import User
+
         users = User.search({"email": user_email})
         if not users:
             return None
-        for user in users:
-            if user.is_valid_password(user_pwd):
-                return user
-        return None
+        if not users[0].is_valid_password(user_pwd):
+            return None
+        return users[0]
