@@ -70,6 +70,7 @@ class BasicAuth(Auth):
         if user_pwd is None:
             return None
         from models.user import User
+
         User.load_from_file()
         users = User.search({"email": user_email})
         if not users:
@@ -77,3 +78,17 @@ class BasicAuth(Auth):
         if not users[0].is_valid_password(user_pwd):
             return None
         return users[0]
+
+    def current_user(self, request=None) -> TypeVar("User"):
+        """complete authentication"""
+        token = self.authorization_header(request=request)
+        if token is not None:
+            token = self.extract_base64_authorization_header(token)
+            if token is not None:
+                token = self.decode_base64_authorization_header(token)
+                if token is not None:
+                    token = self.extract_user_credentials(token)
+                    if token is not None:
+                        user = self.user_object_from_credentials(token)
+                        return user
+        return None
