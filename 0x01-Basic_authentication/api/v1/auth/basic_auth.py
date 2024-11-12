@@ -5,6 +5,7 @@ This module for BasicAuth
 from api.v1.auth.auth import Auth
 from typing import TypeVar
 
+
 class BasicAuth(Auth):
     """
     BasicAuth class inherits from Auth and serves as a
@@ -62,15 +63,19 @@ class BasicAuth(Auth):
         user_pwd: str
     ) -> TypeVar('User'):
         """get user object from credential"""
+        if not isinstance(user_email, str):
+            return None
+        if not isinstance(user_pwd, str):
+            return None
         if user_email is None:
             return None
         if user_pwd is None:
             return None
         from models.user import User
         users = User.search({"email": user_email})
-        if not users or len(users) < 1:
+        if not users:
             return None
-        for i in range(len(users)):
-            if users[i].is_valid_password(user_pwd):
-                return users[i]
+        for user in users:
+            if user.is_valid_password(user_pwd):
+                return user
         return None
