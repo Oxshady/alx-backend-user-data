@@ -7,6 +7,10 @@ from api.v1.auth.session_exp_auth import SessionExpAuth
 
 class SessionDBAuth(SessionExpAuth):
     """Authentication class SessionDBAuth"""
+    def __init__(self):
+        super().__init__()
+        from models.user_session import UserSession
+        UserSession()
 
     def create_session(self, user_id=None):
         """Create a new session and save it in the database."""
@@ -25,7 +29,6 @@ class SessionDBAuth(SessionExpAuth):
             return None
 
         from models.user_session import UserSession
-
         user_sessions = UserSession.search({"session_id": session_id})
         if not user_sessions:
             return None
