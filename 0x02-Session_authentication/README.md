@@ -99,3 +99,7 @@ The goal of this project is to build a robust and flexible session authenticatio
    export API_PORT=5000
    export AUTH_TYPE=session_exp_auth   # or session_db_auth
    export SESSION_DURATION=60          # Optional, for session expiration
+   ```
+   run application
+   ```bash
+   python3 -m api.v1.app
