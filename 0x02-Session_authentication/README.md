@@ -1,45 +1,101 @@
-# 0x02. Session Authentication
+# Backend User Data Authentication System
+
+This project implements an enhanced session authentication system for web applications, providing session expiration, session persistence, and different authentication mechanisms using environment variables for configuration. The main components are `SessionExpAuth` and `SessionDBAuth`.
+
+## Table of Contents
+
+- [Project Overview](#project-overview)
+- [Features](#features)
+  - [Session Expiration (`SessionExpAuth`)](#1-session-expiration-sessionexpauth)
+  - [Session Database Storage (`SessionDBAuth`)](#2-session-database-storage-sessiondbauth)
+- [File Structure](#file-structure)
+- [Environment Configuration](#environment-configuration)
+- [Classes and Methods](#classes-and-methods)
+  - [SessionExpAuth](#sessionexpauth)
+  - [SessionDBAuth](#sessiondbauth)
+- [Usage](#usage)
+  - [Running the Application](#running-the-application)
+  - [Testing the Features](#testing-the-features)
+- [Example](#example)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Project Overview
 
-This project involves implementing a **Session Authentication** mechanism to understand the foundational concepts of managing user sessions without relying on third-party modules or frameworks. The goal is to build a session-based authentication system from scratch, focusing on concepts such as cookies, session management, and secure authentication.
+The goal of this project is to build a robust and flexible session authentication system using Flask. The system extends basic session authentication by:
+1. Adding expiration handling through a `SessionExpAuth` class.
+2. Persisting sessions in a database through a `SessionDBAuth` class to ensure sessions are maintained across server restarts.
 
-## Learning Objectives
+## Features
 
-By the end of this project, you should be able to:
+### 1. Session Expiration (`SessionExpAuth`)
 
-- Understand what authentication means and how session-based authentication works.
-- Explain what cookies are, how to send and receive them, and how to parse them.
-- Implement a basic session-based authentication system using Python and Flask.
-  
-## Resources
+- **Functionality**:
+  - Adds expiration handling to sessions.
+  - The session duration is controlled by the `SESSION_DURATION` environment variable.
+- **Location**: `api/v1/auth/session_exp_auth.py`
 
-- [REST API Authentication Mechanisms - Session Authentication](https://example.com)
-- [HTTP Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies)
-- [Flask Documentation](https://flask.palletsprojects.com/)
-- [Flask Cookie](https://flask.palletsprojects.com/en/1.1.x/quickstart/#cookies)
+### 2. Session Database Storage (`SessionDBAuth`)
 
-## Requirements
+- **Functionality**:
+  - Extends `SessionExpAuth` to persist sessions in a database.
+  - Sessions are stored using a `UserSession` model.
+- **Location**: `api/v1/auth/session_db_auth.py`
 
-- **Python Version**: Python 3.7
-- **OS**: Ubuntu 18.04 LTS
-- **Code Style**: Pycodestyle (version 2.5)
-- **Scripts**:
-  - All scripts should be executable and include `#!/usr/bin/env python3` as the first line.
-  - All files should end with a new line.
-  - The length of your files will be tested using `wc`.
+## File Structure
 
-## Project Structure
+- `api/v1/auth/session_auth.py`: Base session authentication logic.
+- `api/v1/auth/session_exp_auth.py`: Handles session expiration logic.
+- `api/v1/auth/session_db_auth.py`: Extends session handling with database storage.
+- `models/user_session.py`: Defines the `UserSession` model for storing session data.
+- `api/v1/app.py`: Main entry point for the Flask app, updated to conditionally use different authentication classes.
+- `README.md`: Documentation for the project.
 
-- **README.md**: This README file.
-- **Session Authentication Scripts**: Each Python script implements a specific part of the session authentication mechanism. All modules, classes, and functions are documented with clear explanations of their purpose and usage.
+## Environment Configuration
 
-## Code Documentation
+- **`SESSION_DURATION`**: Sets the duration (in seconds) before a session expires. If not set or invalid, sessions do not expire.
+  - Example:
+    ```bash
+    export SESSION_DURATION=60
+    ```
+- **`AUTH_TYPE`**: Controls the type of authentication to use (`session_exp_auth` or `session_db_auth`).
+  - Example:
+    ```bash
+    export AUTH_TYPE=session_exp_auth
+    ```
 
-- **Modules**: Each module is documented to describe its purpose.
-- **Classes**: Every class has a docstring explaining its functionality.
-- **Functions**: Each function, whether inside or outside a class, includes a docstring describing its role and behavior.
+## Classes and Methods
 
----
+### `SessionExpAuth`
 
-This project is a hands-on approach to understanding session-based authentication mechanisms, equipping you with the knowledge to implement secure user authentication for back-end applications.
+- **Location**: `api/v1/auth/session_exp_auth.py`
+- **Methods**:
+  - `__init__()`: Initializes the session duration from `SESSION_DURATION`.
+  - `create_session(user_id=None)`: Creates a session with a `created_at` timestamp.
+  - `user_id_for_session_id(session_id=None)`: Validates and retrieves a user ID based on session expiration.
+
+### `SessionDBAuth`
+
+- **Location**: `api/v1/auth/session_db_auth.py`
+- **Methods**:
+  - `create_session(user_id=None)`: Creates and stores a session in the database.
+  - `user_id_for_session_id(session_id=None)`: Retrieves the user ID from the database.
+  - `destroy_session(request=None)`: Deletes a stored session based on the request cookie.
+
+### `UserSession`
+
+- **Location**: `models/user_session.py`
+- **Attributes**:
+  - `user_id`: The ID of the user.
+  - `session_id`: The session ID associated with the user.
+
+## Usage
+
+### Running the Application
+
+1. Set the appropriate environment variables.
+   ```bash
+   export API_HOST=0.0.0.0
+   export API_PORT=5000
+   export AUTH_TYPE=session_exp_auth   # or session_db_auth
+   export SESSION_DURATION=60          # Optional, for session expiration
