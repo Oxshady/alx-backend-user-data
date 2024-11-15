@@ -20,6 +20,7 @@ class SessionDBAuth(SessionExpAuth):
         from models.user_session import UserSession
 
         user_session = UserSession(user_id=user_id, session_id=uuid4().hex)
+        UserSession.load_from_file()
         user_session.save()
         return user_session.session_id
 
