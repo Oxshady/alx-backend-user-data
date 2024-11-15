@@ -36,11 +36,9 @@ class SessionDBAuth(SessionExpAuth):
         if self.session_duration <= 0:
             return None
         created_at = user_sessions[0].created_at
-        print(created_at)
         if created_at is None:
             return None
         expiration_time = created_at + timedelta(seconds=self.session_duration)
-        print(expiration_time)
         if datetime.now() > expiration_time:
             return None
         return user_sessions[0].user_id
