@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """New authentication class SessionDBAuth"""
 
+from datetime import datetime, timedelta
 from uuid import uuid4
 from api.v1.auth.session_exp_auth import SessionExpAuth
 
@@ -28,10 +29,19 @@ class SessionDBAuth(SessionExpAuth):
         """Retrieve the user ID based on a given session ID."""
         if session_id is None:
             return None
-
         from models.user_session import UserSession
         user_sessions = UserSession.search({"session_id": session_id})
         if not user_sessions:
+            return None
+        if self.session_duration <= 0:
+            return None
+        created_at = user_sessions[0].created_at
+        print(created_at)
+        if created_at is None:
+            return None
+        expiration_time = created_at + timedelta(seconds=self.session_duration)
+        print(expiration_time)
+        if datetime.now() > expiration_time:
             return None
         return user_sessions[0].user_id
 
