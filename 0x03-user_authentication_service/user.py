@@ -6,10 +6,10 @@ from sqlalchemy import Integer, String, Column
 from sqlalchemy.ext.declarative import declarative_base
 
 
-base = declarative_base()
+Base = declarative_base()
 
 
-class User(base):
+class User(Base):
     """
     User: Represents a user with fields for ID, email,
     hashed password, and session ID.
