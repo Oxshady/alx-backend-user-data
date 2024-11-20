@@ -3,7 +3,7 @@
 This module defines the User model for a database using SQLAlchemy
 """
 from sqlalchemy import Integer, String, Column
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.ext.declarative import declarative_base
 
 
 base = declarative_base()
@@ -16,7 +16,7 @@ class User(base):
     """
     __tablename__ = 'users'
 
-    id = Column(String(255), primary_key=True)
+    id = Column(Integer, primary_key=True)
     email = Column(String(250), nullable=False)
     hashed_password = Column(String(250), nullable=False)
     session_id = Column(String(250), nullable=True)
