@@ -2,8 +2,8 @@
 """
 This module defines the User model for a database using SQLAlchemy
 """
-from sqlalchemy import Integer, String
-from sqlalchemy.orm import declarative_base, Mapped, mapped_column
+from sqlalchemy import Integer, String, Column
+from sqlalchemy.orm import declarative_base
 
 
 base = declarative_base()
@@ -15,8 +15,9 @@ class User(base):
     hashed password, and session ID.
     """
     __tablename__ = 'users'
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    email: Mapped[str] = mapped_column(String(250), nullable=False)
-    hashed_password: Mapped[str] = mapped_column(String(250), nullable=False)
-    session_id: Mapped[str] = mapped_column(String(250), nullable=True)
-    reset_token: Mapped[str] = mapped_column(String(250), nullable=True)
+
+    id = Column(String(255), primary_key=True)
+    email = Column(String(250), nullable=False)
+    hashed_password = Column(String(250), nullable=False)
+    session_id = Column(String(250), nullable=True)
+    reset_token = Column(String(250), nullable=True)
